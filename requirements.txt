@@ -1,0 +1,9 @@
+uvicorn
+fastapi
+pydantic
+pydantic_settings
+email-validator
+geopy
+jinja2
+pdfplumber
+sqlalchemy
