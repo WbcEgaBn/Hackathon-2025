@@ -1,0 +1,155 @@
+{
+    "topics": {
+        "zoning": {
+            "case_prefixes": [
+                "ZONE",
+                "ZON",
+                "ZC",
+                "REZ",
+                "MAP",
+                "PDZ",
+                "PD"
+            ],
+            "keywords": [
+                "rezone",
+                "rezoning",
+                "zone change",
+                "zoning map amendment",
+                "development plan",
+                "major modification",
+                "neighborhood plan",
+                "planned development"
+            ],
+            "weight_case": 5,
+            "weight_keyword": 3
+        },
+        "conditional_use": {
+            "case_prefixes": [
+                "CUDP",
+                "CU",
+                "CONDU",
+                "COND"
+            ],
+            "keywords": [
+                "conditional use",
+                "use permit",
+                "conditional approval"
+            ],
+            "weight_case": 5,
+            "weight_keyword": 3
+        },
+        "marijuana_regulation": {
+            "case_prefixes": [],
+            "keywords": [
+                "marijuana",
+                "cannabis",
+                "dispensary",
+                "retail cultivation",
+                "grow facility",
+                "marijuana infused"
+            ],
+            "weight_case": 0,
+            "weight_keyword": 4
+        },
+        "education_facilities": {
+            "keywords": [
+                "school",
+                "high school",
+                "middle school",
+                "elementary",
+                "school district",
+                "campus",
+                "education facility",
+                "gymnasium"
+            ],
+            "weight_keyword": 3
+        },
+        "infrastructure": {
+            "keywords": [
+                "roadway",
+                "transportation",
+                "traffic signal",
+                "intersection",
+                "parking",
+                "bike lane",
+                "stormwater",
+                "utility easement"
+            ],
+            "weight_keyword": 3
+        },
+        "parks_trails": {
+            "keywords": [
+                "trail",
+                "open space",
+                "park",
+                "greenway",
+                "conservation",
+                "trailhead"
+            ],
+            "weight_keyword": 3
+        },
+        "residential_development": {
+            "keywords": [
+                "housing",
+                "apartments",
+                "dwelling units",
+                "townhomes",
+                "condominiums",
+                "multi family",
+                "affordable housing"
+            ],
+            "weight_keyword": 3
+        },
+        "commercial_development": {
+            "keywords": [
+                "commercial",
+                "retail",
+                "industrial",
+                "office",
+                "shopping center",
+                "business park",
+                "mixed use"
+            ],
+            "weight_keyword": 3
+        },
+        "public_facilities": {
+            "keywords": [
+                "fire station",
+                "police",
+                "public safety",
+                "library",
+                "community center",
+                "city facility"
+            ],
+            "weight_keyword": 3
+        },
+        "urban_renewal": {
+            "case_prefixes": [
+                "URP",
+                "UR",
+                "URBAN"
+            ],
+            "keywords": [
+                "urban renewal",
+                "renewal area",
+                "redevelopment"
+            ],
+            "weight_case": 5,
+            "weight_keyword": 3
+        },
+        "appeals": {
+            "case_prefixes": [
+                "AR",
+                "APPL",
+                "APP"
+            ],
+            "keywords": [
+                "appeal",
+                "hearing board"
+            ],
+            "weight_case": 5,
+            "weight_keyword": 2
+        }
+    },
+    "threshold_ratio": 0.5
+}

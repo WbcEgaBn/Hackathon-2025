@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CivicDigest Test UI</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        input,
+        button,
+        select {
+            margin: 6px 0;
+            padding: 6px;
+        }
+
+        .loc {
+            background: #f3f3f3;
+            padding: 6px;
+            margin: 4px 0;
+        }
+
+        .error {
+            color: #b00;
+        }
+
+        .ok {
+            color: #060;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🌆 CivicDigest Test UI</h1>
+
+    <p>This page talks directly to your FastAPI backend.</p>
+
+    <hr>
+
+    <!-- Create User -->
+    <div class="section">
+        <h2>Create User</h2>
+        <input id="email" type="email" placeholder="email@example.com" />
+        <button onclick="createUser()">Create</button>
+        <p id="userOut"></p>
+    </div>
+
+    <!-- Topics -->
+    <div class="section">
+        <h2>Select Interests</h2>
+        <select id="topics" multiple size="6">
+            <option value="zoning">Zoning</option>
+            <option value="conditional_use">Conditional Use</option>
+            <option value="marijuana_regulation">Marijuana Regulation</option>
+            <option value="infrastructure">Infrastructure</option>
+            <option value="parks_trails">Parks & Trails</option>
+            <option value="education_facilities">Education Facilities</option>
+        </select><br>
+        <button onclick="saveTopics()">Save Topics</button>
+        <p id="topicsOut"></p>
+    </div>
+
+    <!-- Add Location -->
+    <div class="section">
+        <h2>Add Location</h2>
+        <input id="label" placeholder="Label (Home, Work…)" /><br>
+        <input id="address" placeholder="Full address" size="40" /><br>
+        <input id="radius" type="number" placeholder="Radius (miles)" /><br>
+        <button onclick="addLocation()">Add</button>
+
+        <h3>Saved Locations</h3>
+        <div id="locList"></div>
+    </div>
+
+    <!-- Items -->
+    <div class="section">
+        <h2>Preview Matched Items</h2>
+        <button onclick="loadItems()">Load Items</button>
+        <pre id="itemsOut"></pre>
+    </div>
+
+    <!-- Digest -->
+    <div class="section">
+        <h2>Send Digest</h2>
+        <button onclick="sendDigest()">Send Digest Email</button>
+        <pre id="digestOut"></pre>
+    </div>
+
+    <script>
+        const API = "http://127.0.0.1:8000";
+        let userId = null;
+
+        function show(id, msg, ok = true) {
+            const el = document.getElementById(id);
+            el.className = ok ? "ok" : "error";
+            el.innerText = msg;
+        }
+
+        // -----------------------------
+        // Create User → POST /users/
+        // -----------------------------
+        async function createUser() {
+            const email = document.getElementById("email").value;
+
+            const res = await fetch(`${API}/users/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            });
+
+            if (!res.ok) {
+                show("userOut", `❌ Failed (status ${res.status})`, false);
+                return;
+            }
+
+            const data = await res.json();
+            userId = data.user_id;
+            show("userOut", `✅ User created: ID ${userId}`);
+        }
+
+        // --------------------------------------------
+        // Save Topics → PUT /users/{id}/topics
+        // --------------------------------------------
+        async function saveTopics() {
+            if (!userId) return alert("Create a user first!");
+
+            const sel = document.getElementById("topics");
+            const topics = Array.from(sel.selectedOptions).map(o => o.value);
+
+            const res = await fetch(`${API}/users/${userId}/topics`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topics })
+            });
+
+            const data = await res.json();
+            show("topicsOut", `Saved: ${data.interested_topics.join(", ")}`);
+        }
+
+        // --------------------------------------------
+        // Add Location → POST /api/users/{id}/locations
+        // --------------------------------------------
+        async function addLocation() {
+            if (!userId) return alert("Create a user first!");
+
+            const payload = {
+                label: document.getElementById("label").value,
+                address: document.getElementById("address").value,
+                radius_miles: Number(document.getElementById("radius").value)
+            };
+
+            const res = await fetch(`${API}/api/users/${userId}/locations`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                alert("❌ Could not add location");
+                return;
+            }
+
+            loadLocations();
+        }
+
+        // --------------------------------------------
+        // Load Locations → GET /api/users/{id}/locations
+        // --------------------------------------------
+        async function loadLocations() {
+            const res = await fetch(`${API}/api/users/${userId}/locations`);
+            const data = await res.json();
+
+            let html = "";
+            for (const loc of data) {
+                html += `<div class="loc">
+                <strong>${loc.label}</strong><br>
+                ${loc.address}<br>
+                Radius: ${loc.radius_miles} mi
+            </div>`;
+            }
+
+            document.getElementById("locList").innerHTML =
+                html || "<em>No locations yet</em>";
+        }
+
+        // --------------------------------------------
+        // Load Items → GET /api/users/{id}/items
+        // --------------------------------------------
+        async function loadItems() {
+            const res = await fetch(`${API}/api/users/${userId}/items`);
+            const data = await res.json();
+
+            document.getElementById("itemsOut").innerText =
+                JSON.stringify(data, null, 2);
+        }
+
+        // --------------------------------------------
+        // Send Digest → POST /api/users/{id}/send_digest
+        // --------------------------------------------
+        async function sendDigest() {
+            const res = await fetch(`${API}/api/users/${userId}/send_digest`, {
+                method: "POST"
+            });
+
+            const data = await res.json();
+            document.getElementById("digestOut").innerText =
+                JSON.stringify(data, null, 2);
+        }
+    </script>
+
+</body>
+
+</html>
