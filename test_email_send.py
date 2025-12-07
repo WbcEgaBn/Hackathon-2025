@@ -1,5 +1,3 @@
-# scripts/test_email_send.py
-
 from notifications.email_sender import send_email
 
 def main():

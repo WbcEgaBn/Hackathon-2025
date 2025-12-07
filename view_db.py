@@ -1,5 +1,3 @@
-# scripts/view_db.py
-
 import sqlite3
 from pathlib import Path
 import json
@@ -14,7 +12,6 @@ def print_section(title):
 
 
 def main():
-    # Ensure DB exists
     if not Path(DB_PATH).exists():
         print(f"❌ Database '{DB_PATH}' not found!")
         print("Run init_db.py or the data pipeline first.")
@@ -23,9 +20,6 @@ def main():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # ======================================================
-    # List Tables
-    # ======================================================
     print_section("TABLES IN DATABASE")
 
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
@@ -34,9 +28,6 @@ def main():
     for t in tables:
         print(f"- {t}")
 
-    # ======================================================
-    # Meetings Table
-    # ======================================================
     if "meetings" in tables:
         print_section("MEETINGS TABLE")
 
@@ -49,9 +40,6 @@ def main():
         for r in cursor.fetchall():
             print(f"ID: {r[0]} | Date: {r[1]} | Type: {r[2]} | URL: {r[3]}")
 
-    # ======================================================
-    # Items Table
-    # ======================================================
     if "items" in tables:
         print_section("ITEMS TABLE (Showing First 10)")
 
@@ -73,9 +61,6 @@ def main():
                 f"| Case: {r[4]} | Location: {r[5]}"
             )
 
-    # ======================================================
-    # Item Topics
-    # ======================================================
     if "items" in tables:
         print_section("TOPICS DETECTED FOR ITEMS")
 
@@ -93,9 +78,6 @@ def main():
             print(f"ItemID: {item_id} | {title}")
             print(f" → Topics: {topics_display}\n")
 
-    # ======================================================
-    # Item Summaries
-    # ======================================================
     if "items" in tables:
         print_section("AI-GENERATED SUMMARIES")
 
@@ -113,9 +95,6 @@ def main():
             print(f"ItemID: {item_id} | Title: {title}")
             print(f"Summary:\n{summary}\n")
 
-    # ======================================================
-    # Users (New Format: with topics + multiple locations)
-    # ======================================================
     if "users" in tables:
         print_section("USERS & THEIR INTERESTS")
 

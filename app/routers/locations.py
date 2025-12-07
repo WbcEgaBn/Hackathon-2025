@@ -1,5 +1,3 @@
-# app/routers/locations.py
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -32,7 +30,6 @@ def add_location(
 ):
     user = _get_user_or_404(db, user_id)
 
-    # Use your cached geocoder
     geo = geocode(db, payload.address)
 
     loc = models.UserLocation(

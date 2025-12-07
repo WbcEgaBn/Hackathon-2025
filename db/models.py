@@ -3,27 +3,21 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-# ============================================================
-# MEETING
-# ============================================================
 class Meeting(Base):
     __tablename__ = "meetings"
 
     meeting_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
 
-    # Core metadata
     date = Column(String(50), nullable=True)
     type = Column(String(200), nullable=True)
 
-    # Optional metadata
     url = Column(String(500), nullable=True)
     agenda_pdf_url = Column(String(500), nullable=True)
     accessible_pdf_url = Column(String(500), nullable=True)
 
     raw_text = Column(Text, nullable=True)
-    processed_summary = Column(Text, nullable=True)  # meeting-level summary (future)
+    processed_summary = Column(Text, nullable=True)  
 
-    # Relationship: ONE meeting → MANY items
     items = relationship("Item", back_populates="meeting")
 
 

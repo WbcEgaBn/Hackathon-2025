@@ -1,5 +1,3 @@
-# app/routers/items.py
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -24,5 +22,4 @@ def get_relevant_items(user_id: int, db: Session = Depends(get_db)):
 
     items = get_items_for_user(db, user)
 
-    # Let Pydantic handle mapping via orm_mode
-    return items
+=    return items

@@ -1,5 +1,3 @@
-# generate_summaries.py
-
 from db.database import SessionLocal
 from db import models
 from processing.rule_summarizer import summarize_item_rule_based
@@ -16,7 +14,6 @@ def main():
     updated = 0
 
     for item in items:
-        # If summary exists, skip
         if item.processed_summary and item.processed_summary.strip():
             continue
 
@@ -29,7 +26,6 @@ def main():
             "raw_block": item.raw_block
         })
 
-        # Save summary
         item.processed_summary = summary
         updated += 1
 

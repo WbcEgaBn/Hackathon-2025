@@ -1,13 +1,6 @@
-# app/processing/ingestion.py
-
 from datetime import date
 
 def fetch_new_meetings():
-    """
-    Hackathon-friendly stub:
-    Returns a list of local PDFs you want to ingest.
-    In production: scrape Legistar for new agenda URLs.
-    """
 
     return [
         {

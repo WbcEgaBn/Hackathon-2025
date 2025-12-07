@@ -10,7 +10,6 @@ print(f"Detected {len(items)} items:\n")
 for i, item in enumerate(items, 1):
     print(f"--- Item {i} ---")
 
-    # Section header like "5.A Consent Calendar"
     section_str = f"{item['section_code']} {item['section_title']}" if item['section_title'] else item['section_code']
     print("Section:", section_str)
 
@@ -24,7 +23,6 @@ for i, item in enumerate(items, 1):
 
     print("Description:", item["description"])
 
-    # Presenters list
     if item.get("presenters"):
         print("Presenters:")
         for p in item["presenters"]:

@@ -1,5 +1,3 @@
-# notifications/email_sender.py
-
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -17,7 +15,7 @@ FROM_EMAIL = EMAIL_USERNAME
 
 def send_email(to, subject, html_body):
     if not EMAIL_USERNAME or not EMAIL_PASSWORD:
-        print("❌ EMAIL_USERNAME or EMAIL_PASSWORD not set in .env")
+        print("EMAIL_USERNAME or EMAIL_PASSWORD not set in .env")
         return
 
     msg = MIMEMultipart("alternative")
@@ -32,6 +30,6 @@ def send_email(to, subject, html_body):
             server.starttls()
             server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
             server.sendmail(FROM_EMAIL, [to], msg.as_string())
-        print(f"📨 Successfully sent to {to}")
+        print(f"Successfully sent to {to}")
     except Exception as e:
-        print(f"❌ Email send failed: {e}")
+        print(f"Email send failed: {e}")

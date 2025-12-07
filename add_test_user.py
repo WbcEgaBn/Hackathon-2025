@@ -1,5 +1,3 @@
-# scripts/add_test_user.py
-
 from db.database import SessionLocal
 from db import models
 from notifications.geocoder import geocode
@@ -8,11 +6,8 @@ from notifications.geocoder import geocode
 def main():
     db = SessionLocal()
 
-    # -------------------------------
-    # 1. Create User
-    # -------------------------------
     user = models.User(
-        email="ryanenriquez65@gmail.com",
+        email="passtibet1@gmail.com",
         interested_topics=["marijuana_regulation", "education"],
     )
 
@@ -22,9 +17,6 @@ def main():
 
     print(f"✅ User created | ID={user.user_id} | {user.email}")
 
-    # -------------------------------
-    # 2. Define user’s multiple areas
-    # -------------------------------
     saved_locations = [
         {
             "label": "Home",
@@ -43,12 +35,8 @@ def main():
         },
     ]
 
-    # -------------------------------
-    # 3. Insert UserLocation records
-    # -------------------------------
     for loc in saved_locations:
 
-        # ✔ Correct usage: geocode(db, address)
         geo = geocode(db, loc["address"])
 
         user_loc = models.UserLocation(

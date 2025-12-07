@@ -1,5 +1,3 @@
-# send_all_digests.py
-
 from db.database import SessionLocal
 from db import models
 from notifications.digest_builder import get_items_for_user
@@ -15,9 +13,7 @@ def main():
 
     for user in users:
 
-        # ----------------------------------------------------
-        # 1. Ensure ALL user locations have geocodes (lazy load)
-        # ----------------------------------------------------
+       
         for loc in user.locations:
             if loc.lat is None or loc.lon is None:
                 print(f"📍 Geocoding missing coords for '{loc.label}' ...")
@@ -28,24 +24,14 @@ def main():
                     loc.normalized_address = geo.get("normalized", loc.address)
         db.commit()
 
-        # ----------------------------------------------------
-        # 2. Get personalized relevant items 
-        #    (topics + all saved locations)
-        # ----------------------------------------------------
         items = get_items_for_user(db, user)
 
         if not items:
             print(f"ℹ No matching items for {user.email}; skipping.")
             continue
 
-        # ----------------------------------------------------
-        # 3. Render newsletter HTML
-        # ----------------------------------------------------
         html_body = render_digest(user, items)
 
-        # ----------------------------------------------------
-        # 4. Send the email
-        # ----------------------------------------------------
         send_email(
             to=user.email,
             subject="Your Civic Agenda Digest",

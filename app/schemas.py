@@ -1,10 +1,7 @@
-# app/schemas.py
-
 from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
-# ------------- User-related -------------
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -43,7 +40,6 @@ class UserRead(BaseModel):
         orm_mode = True
 
 
-# ------------- Item-related -------------
 
 class ItemRead(BaseModel):
     item_id: int
@@ -55,9 +51,6 @@ class ItemRead(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-# ------------- Digest -------------
 
 class DigestPreview(BaseModel):
     items: List[ItemRead]
