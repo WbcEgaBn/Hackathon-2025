@@ -22,14 +22,22 @@
             const [email, setEmail] = useState('');
             const [message, setMessage] = useState('');
             const [messageType, setMessageType] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+            const [isFocused, setIsFocused] = useState(false);
 
             const isValidEmail = (email) => {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return emailRegex.test(email);
             };
 
-            const handleSubmit = (e) => {
+            const handleSubmit = async (e) => {
                 e.preventDefault();
+
+                if (!email.trim()) {
+                    setMessage('Please enter an email address');
+                    setMessageType('error');
+                    return;
+                }
 
                 if (!isValidEmail(email)) {
                     setMessage('Please enter a valid email address');
@@ -37,73 +45,161 @@
                     return;
                 }
 
-                console.log('Email submitted:', email);
-                setMessage(`Thank you! We've received your email: ${email}`);
-                setMessageType('success');
-                setEmail('');
-
+                setIsLoading(true);
+                
+                // Simulate API call
                 setTimeout(() => {
-                    setMessage('');
-                    setMessageType('');
-                }, 5000);
+                    console.log('Email submitted:', email);
+                    setMessage(`✓ Success! Check your email at ${email}`);
+                    setMessageType('success');
+                    setEmail('');
+                    setIsLoading(false);
+
+                    setTimeout(() => {
+                        setMessage('');
+                        setMessageType('');
+                    }, 5000);
+                }, 1500);
             };
 
             return (
-                <div className="min-h-screen  style={{backgroundColor: '#E2CCC6'}}>
-                    <div className="bg-white rounded-lg shadow-2xl p-12 w-full max-w-md">
-                        <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-                            Subscribe Today
-                        </h1>
-                        <p className="text-gray-600 text-center mb-8 text-sm">
-                            Join our mailing list to get updates and exclusive content
-                        </p>
+                <div style={{minHeight: '100vh', backgroundColor: '#E2CCC6'}} className="flex justify-center items-center p-4">
+                    <div className="w-full max-w-md">
+                        {/* Header */}
+                        <div className="mb-12 text-center">
+                            <div className="inline-block p-3 bg-white rounded-full mb-4 shadow-sm">
+                                <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h1 className="text-4xl font-light text-gray-900 mb-2">
+                                Stay Updated
+                            </h1>
+                            <p className="text-gray-600 font-light text-base">
+                                Get the latest news delivered to your inbox
+                            </p>
+                        </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <label 
-                                    htmlFor="email" 
-                                    className="block text-gray-800 font-semibold mb-2 text-sm"
-                                >
-                                    Email Address
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Enter your email address"
-                                    required
-                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500"
-                                />
+                        {/* Form Card */}
+                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                            <div className="p-8">
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div>
+                                        <label 
+                                            htmlFor="email" 
+                                            className="block text-gray-700 font-medium mb-3 text-sm uppercase tracking-wide"
+                                        >
+                                            Email Address
+                                        </label>
+                                        <div className={`relative transition-all duration-300 ${isFocused ? 'transform scale-105' : ''}`}>
+                                            <input
+                                                type="email"
+                                                id="email"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                onFocus={() => setIsFocused(true)}
+                                                onBlur={() => setIsFocused(false)}
+                                                placeholder="name@example.com"
+                                                required
+                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl text-base transition-all duration-300 focus:outline-none focus:bg-white focus:border-gray-400 focus:shadow-md placeholder-gray-400"
+                                            />
+                                            {email && isValidEmail(email) && (
+                                                <div className="absolute right-4 top-4">
+                                                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="w-full px-6 py-4 bg-gray-900 text-white font-medium rounded-xl transition-all duration-300 hover:bg-gray-800 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-2 uppercase tracking-wide text-sm"
+                                    >
+                                        {isLoading ? (
+                                            <>
+                                                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                <span>Subscribing...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>Subscribe Now</span>
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                                </svg>
+                                            </>
+                                        )}
+                                    </button>
+                                </form>
                             </div>
 
-                            <button
-                                type="submit"
-                                className="w-full px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
-                            >
-                                Subscribe
-                            </button>
-                        </form>
+                            {/* Benefits Section */}
+                            <div className="bg-gray-50 px-8 py-6 border-t border-gray-100">
+                                <div className="grid grid-cols-3 gap-4 text-center">
+                                    <div>
+                                        <div className="text-2xl font-light text-gray-900 mb-1">100%</div>
+                                        <p className="text-xs text-gray-600 font-light">No Spam</p>
+                                    </div>
+                                    <div>
+                                        <div className="text-2xl font-light text-gray-900 mb-1">1-2x</div>
+                                        <p className="text-xs text-gray-600 font-light">Per Week</p>
+                                    </div>
+                                    <div>
+                                        <div className="text-2xl font-light text-gray-900 mb-1">∞</div>
+                                        <p className="text-xs text-gray-600 font-light">Unsubscribe</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                        {/* Message */}
                         {message && (
                             <div
-                                className={`mt-6 p-3 rounded-lg text-center text-sm font-medium transition-all ${
+                                className={`mt-6 p-4 rounded-xl text-center text-sm font-medium transition-all duration-300 animate-fadeIn ${
                                     messageType === 'success'
-                                        ? 'bg-green-100 text-green-800 border border-green-300'
-                                        : 'bg-red-100 text-red-800 border border-red-300'
+                                        ? 'bg-green-50 text-green-800 border border-green-200'
+                                        : 'bg-red-50 text-red-800 border border-red-200'
                                 }`}
                             >
                                 {message}
                             </div>
                         )}
+
+                        {/* Footer */}
+                        <p className="text-center text-gray-500 text-xs mt-6 font-light">
+                            We respect your privacy. Unsubscribe at any time.
+                        </p>
                     </div>
                 </div>
             );
         }
+
+        // Add animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .animate-fadeIn {
+                animation: fadeIn 0.3s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
 
         // Render the React component
         ReactDOM.render(<EmailForm />, document.getElementById('root'));
     </script>
 </body>
 </html>
-
