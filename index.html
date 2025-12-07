@@ -325,13 +325,10 @@
                                 ))}
                             </div>
 
-                            <div className="mt-8 pt-6 border-t border-gray-200">
-                                <button
-                                    onClick={handleFinish}
-                                    className="w-full button-primary text-white font-semibold py-3 rounded-lg"
-                                >
-                                    Finish
-                                </button>
+                            <div className="mt-10 flex gap-3 justify-center flex-wrap fade-in">
+                                <a href="./location-map.html" className="nav-button">
+                                    → Next
+                                </a>
                             </div>
 
                             {/* Progress */}
@@ -358,14 +355,6 @@
                         )}
 
                         {/* Navigation */}
-                        <div className="mt-10 flex gap-3 justify-center flex-wrap fade-in">
-                            <a href="./location-map.html" className="nav-button">
-                                → Location Search
-                            </a>
-                            <a href="./chatbot.html" className="nav-button-secondary">
-                                → AI Assistant
-                            </a>
-                        </div>
                     </div>
                 </div>
             );
