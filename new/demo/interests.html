@@ -1,239 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<title>Select Interests</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Select Interests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- EB Garamond Font -->
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- EB Garamond Font -->
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
 
-<!-- particles.js style -->
-<link rel="stylesheet" media="screen" href="css/style.css">
+    <!-- particles.js style -->
+    <link rel="stylesheet" media="screen" href="css/style.css">
 
-<style>
-    body {
-        margin: 0;
-        font-family: 'EB Garamond', serif;
-        overflow: hidden;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: 'EB Garamond', serif;
+            overflow: hidden;
+        }
 
-    /* Ensure particles take full background */
-    #particles-js {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        background-color: #111;
-        top: 0;
-        left: 0;
-        z-index: 1;
-        pointer-events: none;
-    }
-    
-    #particles-js canvas {
-        pointer-events: none;
-    }
+        /* Ensure particles take full background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: #111;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-    /* Container */
-    .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        width: 90%;
-        max-width: 600px;
-        z-index: 10;
-        pointer-events: auto;
-    }
+        #particles-js canvas {
+            pointer-events: none;
+        }
 
-    .interests-title {
-        font-size: 32px;
-        color: white;
-        margin-bottom: 30px;
-        font-weight: 600;
-    }
+        /* Container */
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            z-index: 10;
+            pointer-events: auto;
+        }
 
-    .interests-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 15px;
-        margin-bottom: 30px;
-        max-height: 60vh;
-        overflow-y: auto;
-        padding: 10px;
-    }
+        .interests-title {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
 
-    .interest-item {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s;
-        color: white;
-        font-size: 18px;
-    }
+        .interests-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
 
-    .interest-item:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.4);
-    }
+        .interest-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-size: 18px;
+        }
 
-    .interest-item.selected {
-        background: rgba(0, 102, 255, 0.3);
-        border-color: #0066ff;
-    }
+        .interest-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
 
-    .interest-emoji {
-        font-size: 32px;
-        margin-right: 15px;
-    }
+        .interest-item.selected {
+            background: rgba(0, 102, 255, 0.3);
+            border-color: #0066ff;
+        }
 
-    .interest-label {
-        flex: 1;
-        text-align: left;
-    }
+        .interest-emoji {
+            font-size: 32px;
+            margin-right: 15px;
+        }
 
-    .interest-checkbox {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-    }
+        .interest-label {
+            flex: 1;
+            text-align: left;
+        }
 
-    .back-btn {
-        padding: 12px 30px;
-        font-size: 18px;
-        background: #6c757d;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-        font-family: 'EB Garamond', serif;
-        pointer-events: auto;
-        position: relative;
-        z-index: 100;
-    }
+        .interest-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
 
-    .back-btn:hover {
-        background: #5a6268;
-    }
-</style>
+        .back-btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'EB Garamond', serif;
+            pointer-events: auto;
+            position: relative;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .save-btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            background: #0066ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'EB Garamond', serif;
+            pointer-events: auto;
+            position: relative;
+            z-index: 100;
+            margin-right: 10px;
+        }
+
+        .save-btn:hover {
+            background: #004ecc;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            font-size: 16px;
+            min-height: 20px;
+        }
+
+        .status-message.success {
+            color: #4caf50;
+        }
+
+        .status-message.error {
+            color: #f44336;
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- particles.js background -->
-<div id="particles-js"></div>
+    <!-- particles.js background -->
+    <div id="particles-js"></div>
 
-<div class="container">
-  <h1 class="interests-title">Select your interests</h1>
-  <div class="interests-grid" id="interestsGrid">
-    <div class="interest-item" data-interest="construction">
-      <span class="interest-emoji">🏗️</span>
-      <span class="interest-label">Construction and Development</span>
-      <input type="checkbox" class="interest-checkbox" data-interest="construction">
+    <div class="container">
+        <h1 class="interests-title">Select your interests</h1>
+        <div class="interests-grid" id="interestsGrid">
+            <div class="interest-item" data-interest="construction">
+                <span class="interest-emoji">🏗️</span>
+                <span class="interest-label">Construction and Development</span>
+                <input type="checkbox" class="interest-checkbox" data-interest="construction">
+            </div>
+            <div class="interest-item" data-interest="traffic">
+                <span class="interest-emoji">🚦</span>
+                <span class="interest-label">Traffic and Transportation</span>
+                <input type="checkbox" class="interest-checkbox" data-interest="traffic">
+            </div>
+            <div class="interest-item" data-interest="parks">
+                <span class="interest-emoji">🌳</span>
+                <span class="interest-label">Parks and Weeds Management</span>
+                <input type="checkbox" class="interest-checkbox" data-interest="parks">
+            </div>
+            <div class="interest-item" data-interest="zoning">
+                <span class="interest-emoji">📋</span>
+                <span class="interest-label">Zoning and Planning</span>
+                <input type="checkbox" class="interest-checkbox" data-interest="zoning">
+            </div>
+            <div class="interest-item" data-interest="utilities">
+                <span class="interest-emoji">⚡</span>
+                <span class="interest-label">Utilities and Infrastructure</span>
+                <input type="checkbox" class="interest-checkbox" data-interest="utilities">
+            </div>
+            <div class="interest-item" data-interest="safety">
+                <span class="interest-emoji">🚨</span>
+                <span class="interest-label">Public Safety</span>
+                <input type="checkbox" class="interest-checkbox" data-interest="safety">
+            </div>
+            <div class="interest-item" data-interest="education">
+                <span class="interest-emoji">🎓</span>
+                <span class="interest-label">Education and School</span>
+                <input type="checkbox" class="interest-checkbox" data-interest="education">
+            </div>
+            <div class="interest-item" data-interest="marijuana_regulation">
+                <span class="interest-emoji">🏪</span>
+                <span class="interest-label">Drug Regulation</span>
+                <input type="checkbox" class="interest-checkbox" data-interest="marijuana_regulation">
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="save-btn" onclick="saveInterests()">Save Interests</button>
+            <button class="back-btn" onclick="window.location.href='main-menu.html'">Back</button>
+        </div>
+        <div class="status-message" id="statusMessage"></div>
     </div>
-    <div class="interest-item" data-interest="traffic">
-      <span class="interest-emoji">🚦</span>
-      <span class="interest-label">Traffic and Transportation</span>
-      <input type="checkbox" class="interest-checkbox" data-interest="traffic">
-    </div>
-    <div class="interest-item" data-interest="parks">
-      <span class="interest-emoji">🌳</span>
-      <span class="interest-label">Parks and Weeds Management</span>
-      <input type="checkbox" class="interest-checkbox" data-interest="parks">
-    </div>
-    <div class="interest-item" data-interest="zoning">
-      <span class="interest-emoji">📋</span>
-      <span class="interest-label">Zoning and Planning</span>
-      <input type="checkbox" class="interest-checkbox" data-interest="zoning">
-    </div>
-    <div class="interest-item" data-interest="utilities">
-      <span class="interest-emoji">⚡</span>
-      <span class="interest-label">Utilities and Infrastructure</span>
-      <input type="checkbox" class="interest-checkbox" data-interest="utilities">
-    </div>
-    <div class="interest-item" data-interest="safety">
-      <span class="interest-emoji">🚨</span>
-      <span class="interest-label">Public Safety</span>
-      <input type="checkbox" class="interest-checkbox" data-interest="safety">
-    </div>
-    <div class="interest-item" data-interest="education">
-      <span class="interest-emoji">🎓</span>
-      <span class="interest-label">Education and School</span>
-      <input type="checkbox" class="interest-checkbox" data-interest="education">
-    </div>
-    <div class="interest-item" data-interest="business">
-      <span class="interest-emoji">🏪</span>
-      <span class="interest-label">Local Business</span>
-      <input type="checkbox" class="interest-checkbox" data-interest="business">
-    </div>
-  </div>
-  <button class="back-btn" onclick="window.location.href='main-menu.html'">Back</button>
-</div>
 
-<!-- particles scripts -->
-<script src="../particles.js"></script>
-<script src="js/app.js"></script>
+    <!-- particles scripts -->
+    <script src="../particles.js"></script>
+    <script src="js/app.js"></script>
 
-<!-- stats.js -->
-<script src="js/lib/stats.js" onerror="console.warn('Failed to load stats.js')"></script>
+    <!-- stats.js -->
+    <script src="js/lib/stats.js" onerror="console.warn('Failed to load stats.js')"></script>
 
-<script>
-// Initialize stats (optional - only if Stats is available)
-setTimeout(function() {
-    if (typeof Stats !== 'undefined') {
-        try {
-            var count_particles, stats, update;
-            stats = new Stats();
-            stats.setMode(0);
-            stats.domElement.style.position = 'absolute';
-            stats.domElement.style.left = '0px';
-            stats.domElement.style.top = '0px';
-            document.body.appendChild(stats.domElement);
+    <script>
+        const API = "http://127.0.0.1:8000";
+        let userId = null;
 
-            update = function() {
-                stats.begin();
-                stats.end();
-                requestAnimationFrame(update);
-            };
-            requestAnimationFrame(update);
-        } catch (e) {
-            console.warn('Stats initialization failed:', e);
+        // Get userId from sessionStorage (set during account creation)
+        function getUserId() {
+            return sessionStorage.getItem('userId');
         }
-    }
-}, 100);
 
-// Initialize interest selection handlers
-function initializeInterestHandlers() {
-    // Interest selection handlers
-    document.querySelectorAll('.interest-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            if (e.target.type === 'checkbox') return;
-            const checkbox = this.querySelector('.interest-checkbox');
-            checkbox.checked = !checkbox.checked;
-            this.classList.toggle('selected', checkbox.checked);
-        });
-    });
+        // Display status message
+        function showStatus(message, isSuccess = true) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.innerText = message;
+            statusEl.className = isSuccess ? 'status-message success' : 'status-message error';
+        }
 
-    document.querySelectorAll('.interest-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const item = this.closest('.interest-item');
-            item.classList.toggle('selected', this.checked);
-        });
-    });
-}
+        // Save selected interests to API
+        async function saveInterests() {
+            userId = getUserId();
+            if (!userId) {
+                showStatus('❌ No user ID found. Please create an account first.', false);
+                return;
+            }
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeInterestHandlers);
-} else {
-    initializeInterestHandlers();
-}
-</script>
+            // Get all checked interests
+            const interests = Array.from(document.querySelectorAll('.interest-checkbox:checked'))
+                .map(checkbox => checkbox.dataset.interest);
+
+            if (interests.length === 0) {
+                showStatus('❌ Please select at least one interest.', false);
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API}/users/${userId}/topics`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ topics: interests })
+                });
+
+                if (!res.ok) {
+                    showStatus(`❌ Failed to save interests (status ${res.status})`, false);
+                    return;
+                }
+
+                const data = await res.json();
+                showStatus(`✅ Interests saved: ${data.interested_topics.join(", ")}`, true);
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, false);
+                console.error('Error saving interests:', error);
+            }
+        }
+
+        // Initialize stats (optional - only if Stats is available)
+        setTimeout(function () {
+            if (typeof Stats !== 'undefined') {
+                try {
+                    var count_particles, stats, update;
+                    stats = new Stats();
+                    stats.setMode(0);
+                    stats.domElement.style.position = 'absolute';
+                    stats.domElement.style.left = '0px';
+                    stats.domElement.style.top = '0px';
+                    document.body.appendChild(stats.domElement);
+
+                    update = function () {
+                        stats.begin();
+                        stats.end();
+                        requestAnimationFrame(update);
+                    };
+                    requestAnimationFrame(update);
+                } catch (e) {
+                    console.warn('Stats initialization failed:', e);
+                }
+            }
+        }, 100);
+
+        // Initialize interest selection handlers
+        function initializeInterestHandlers() {
+            // Interest selection handlers
+            document.querySelectorAll('.interest-item').forEach(item => {
+                item.addEventListener('click', function (e) {
+                    if (e.target.type === 'checkbox') return;
+                    const checkbox = this.querySelector('.interest-checkbox');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected', checkbox.checked);
+                });
+            });
+
+            document.querySelectorAll('.interest-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const item = this.closest('.interest-item');
+                    item.classList.toggle('selected', this.checked);
+                });
+            });
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeInterestHandlers);
+        } else {
+            initializeInterestHandlers();
+        }
+    </script>
 
 </body>
-</html>
 
+</html>

@@ -22,4 +22,4 @@ def get_relevant_items(user_id: int, db: Session = Depends(get_db)):
 
     items = get_items_for_user(db, user)
 
-=    return items
+    return items

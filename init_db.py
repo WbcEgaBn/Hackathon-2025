@@ -1,5 +1,3 @@
-# scripts/init_db.py
-
 from db.database import Base, engine
 from db import models
 

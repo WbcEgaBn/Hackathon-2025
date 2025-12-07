@@ -7,7 +7,7 @@ def main():
     db = SessionLocal()
 
     user = models.User(
-        email="passtibet1@gmail.com",
+        email="ryanenriquez65@gmail.com",
         interested_topics=["marijuana_regulation", "education"],
     )
 

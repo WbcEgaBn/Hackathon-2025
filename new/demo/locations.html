@@ -1,457 +1,568 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<title>Select Locations</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Select Locations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- EB Garamond Font -->
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- EB Garamond Font -->
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
 
-<!-- particles.js style -->
-<link rel="stylesheet" media="screen" href="css/style.css">
+    <!-- particles.js style -->
+    <link rel="stylesheet" media="screen" href="css/style.css">
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<style>
-    body {
-        margin: 0;
-        font-family: 'EB Garamond', serif;
-        overflow: hidden;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: 'EB Garamond', serif;
+            overflow: hidden;
+        }
 
-    /* Ensure particles take full background */
-    #particles-js {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        background-color: #111;
-        top: 0;
-        left: 0;
-        z-index: 1;
-        pointer-events: none;
-    }
-    
-    #particles-js canvas {
-        pointer-events: none;
-    }
+        /* Ensure particles take full background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: #111;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-    /* Container */
-    .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        width: 90%;
-        max-width: 600px;
-        z-index: 10;
-        pointer-events: auto;
-        max-height: 90vh;
-        overflow-y: auto;
-    }
+        #particles-js canvas {
+            pointer-events: none;
+        }
 
-    .locations-title {
-        font-size: 32px;
-        color: white;
-        margin-bottom: 20px;
-        font-weight: 600;
-    }
+        /* Container */
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            z-index: 10;
+            pointer-events: auto;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
 
-    .location-input-group {
-        margin-bottom: 15px;
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        position: relative;
-    }
+        .locations-title {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
 
-    .location-input {
-        flex: 1;
-        padding: 12px;
-        font-size: 16px;
-        font-family: 'EB Garamond', serif;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-    }
+        .location-input-group {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            position: relative;
+        }
 
-    .location-input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-    }
+        .location-input {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            font-family: 'EB Garamond', serif;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
 
-    .radius-select {
-        padding: 12px;
-        font-size: 16px;
-        font-family: 'EB Garamond', serif;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        cursor: pointer;
-        min-width: 120px;
-    }
+        .location-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
-    .continue-btn {
-        padding: 12px 30px;
-        font-size: 18px;
-        background: #0066ff;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-        font-family: 'EB Garamond', serif;
-        margin-bottom: 20px;
-        pointer-events: auto;
-        position: relative;
-        z-index: 100;
-    }
+        .radius-select {
+            padding: 12px;
+            font-size: 16px;
+            font-family: 'EB Garamond', serif;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            min-width: 120px;
+        }
 
-    .continue-btn:hover {
-        background: #004ecc;
-    }
+        .continue-btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            background: #0066ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'EB Garamond', serif;
+            margin-bottom: 20px;
+            pointer-events: auto;
+            position: relative;
+            z-index: 100;
+        }
 
-    .locations-container {
-        margin-bottom: 20px;
-        max-height: 30vh;
-        overflow-y: auto;
-        padding: 10px;
-    }
+        .continue-btn:hover {
+            background: #004ecc;
+        }
 
-    #map {
-        width: 100%;
-        height: 300px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        z-index: 1;
-    }
-    
-    .autocomplete-suggestions {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 1000;
-        width: 100%;
-        margin-top: 2px;
-    }
-    
-    .autocomplete-suggestion {
-        padding: 10px;
-        cursor: pointer;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .autocomplete-suggestion:hover {
-        background: #f0f0f0;
-    }
-    
-    .autocomplete-suggestion:last-child {
-        border-bottom: none;
-    }
+        .locations-container {
+            margin-bottom: 20px;
+            max-height: 30vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
 
-    .back-btn {
-        padding: 12px 30px;
-        font-size: 18px;
-        background: #6c757d;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-        font-family: 'EB Garamond', serif;
-        pointer-events: auto;
-        position: relative;
-        z-index: 100;
-    }
+        #map {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            z-index: 1;
+        }
 
-    .back-btn:hover {
-        background: #5a6268;
-    }
-</style>
+        .autocomplete-suggestions {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: 100%;
+            margin-top: 2px;
+        }
+
+        .autocomplete-suggestion {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .autocomplete-suggestion:hover {
+            background: #f0f0f0;
+        }
+
+        .autocomplete-suggestion:last-child {
+            border-bottom: none;
+        }
+
+        .back-btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'EB Garamond', serif;
+            pointer-events: auto;
+            position: relative;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .save-btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            background: #0066ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'EB Garamond', serif;
+            pointer-events: auto;
+            position: relative;
+            z-index: 100;
+        }
+
+        .save-btn:hover {
+            background: #004ecc;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            font-size: 16px;
+            min-height: 20px;
+        }
+
+        .status-message.success {
+            color: #4caf50;
+        }
+
+        .status-message.error {
+            color: #f44336;
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- particles.js background -->
-<div id="particles-js"></div>
+    <!-- particles.js background -->
+    <div id="particles-js"></div>
 
-<div class="container">
-  <h1 class="locations-title">Select the locations you are interested in</h1>
-  <div class="locations-container" id="locationsContainer">
-    <div class="location-input-group">
-      <input type="text" class="location-input" placeholder="Enter location" id="locationInput0">
-      <select class="radius-select" id="radiusSelect0">
-        <option value="2">2 miles</option>
-        <option value="5" selected>5 miles</option>
-        <option value="8">8 miles</option>
-        <option value="10">10 miles</option>
-      </select>
+    <div class="container">
+        <h1 class="locations-title">Select the locations you are interested in</h1>
+        <div class="locations-container" id="locationsContainer">
+            <div class="location-input-group">
+                <input type="text" class="location-input" placeholder="Enter location" id="locationInput0">
+                <select class="radius-select" id="radiusSelect0">
+                    <option value="2">2 miles</option>
+                    <option value="5" selected>5 miles</option>
+                    <option value="8">8 miles</option>
+                    <option value="10">10 miles</option>
+                </select>
+            </div>
+        </div>
+        <button class="continue-btn" onclick="addLocationInput()">Continue</button>
+        <div id="map"></div>
+        <div class="button-group">
+            <button class="save-btn" onclick="saveLocations()">Save Locations</button>
+            <button class="back-btn" onclick="window.location.href='main-menu.html'">Back</button>
+        </div>
+        <div class="status-message" id="statusMessage"></div>
     </div>
-  </div>
-  <button class="continue-btn" onclick="addLocationInput()">Continue</button>
-  <div id="map"></div>
-  <button class="back-btn" onclick="window.location.href='main-menu.html'">Back</button>
-</div>
 
-<!-- particles scripts -->
-<script src="../particles.js"></script>
-<script src="js/app.js"></script>
+    <!-- particles scripts -->
+    <script src="../particles.js"></script>
+    <script src="js/app.js"></script>
 
-<!-- stats.js -->
-<script src="js/lib/stats.js" onerror="console.warn('Failed to load stats.js')"></script>
+    <!-- stats.js -->
+    <script src="js/lib/stats.js" onerror="console.warn('Failed to load stats.js')"></script>
 
-<script>
-// Global variables
-let map;
-let markers = [];
-let circles = [];
-let locationCount = 1;
-let mapInitialized = false;
-let autocompleteTimeouts = {};
+    <script>
+        // Global variables
+        let map;
+        let markers = [];
+        let circles = [];
+        let locationCount = 1;
+        let mapInitialized = false;
+        let autocompleteTimeouts = {};
 
-// Initialize stats (optional - only if Stats is available)
-setTimeout(function() {
-    if (typeof Stats !== 'undefined') {
-        try {
-            var count_particles, stats, update;
-            stats = new Stats();
-            stats.setMode(0);
-            stats.domElement.style.position = 'absolute';
-            stats.domElement.style.left = '0px';
-            stats.domElement.style.top = '0px';
-            document.body.appendChild(stats.domElement);
+        const API = "http://127.0.0.1:8000";
+        let userId = null;
 
-            update = function() {
-                stats.begin();
-                stats.end();
-                requestAnimationFrame(update);
-            };
-            requestAnimationFrame(update);
-        } catch (e) {
-            console.warn('Stats initialization failed:', e);
+        // Get userId from sessionStorage (set during account creation)
+        function getUserId() {
+            return sessionStorage.getItem('userId');
         }
-    }
-}, 100);
 
-// Initialize map
-function initMap() {
-    if (mapInitialized || !document.getElementById('map')) return;
-    
-    map = L.map('map').setView([37.7749, -122.4194], 10); // Default to San Francisco
-    
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19
-    }).addTo(map);
-    
-    mapInitialized = true;
-}
-
-// Store suggestions divs for each input
-const suggestionsDivs = {};
-
-// Initialize autocomplete for location input using Nominatim (OpenStreetMap)
-function initAutocomplete(inputId) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-    
-    // Check if autocomplete is already initialized for this input
-    if (input.dataset.autocompleteInitialized === 'true') {
-        return; // Already initialized
-    }
-    
-    // Mark as initialized
-    input.dataset.autocompleteInitialized = 'true';
-    
-    // Initialize suggestions div for this input
-    if (!suggestionsDivs[inputId]) {
-        suggestionsDivs[inputId] = null;
-    }
-    
-    input.addEventListener('input', function() {
-        const query = this.value.trim();
-        
-        // Clear previous timeout
-        if (autocompleteTimeouts[inputId]) {
-            clearTimeout(autocompleteTimeouts[inputId]);
+        // Display status message
+        function showStatus(message, isSuccess = true) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.innerText = message;
+            statusEl.className = isSuccess ? 'status-message success' : 'status-message error';
         }
-        
-        // Remove existing suggestions for this input
-        if (suggestionsDivs[inputId]) {
-            suggestionsDivs[inputId].remove();
-            suggestionsDivs[inputId] = null;
-        }
-        
-        if (query.length < 3) return;
-        
-        // Debounce API calls
-        autocompleteTimeouts[inputId] = setTimeout(function() {
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length === 0) return;
-                    
-                    const currentInput = document.getElementById(inputId);
-                    if (!currentInput) return;
-                    
-                    // Create suggestions dropdown
-                    const suggestionsDiv = document.createElement('div');
-                    suggestionsDiv.className = 'autocomplete-suggestions';
-                    suggestionsDiv.style.position = 'absolute';
-                    suggestionsDiv.style.top = (currentInput.offsetHeight + 2) + 'px';
-                    suggestionsDiv.style.left = '0px';
-                    suggestionsDiv.style.width = currentInput.offsetWidth + 'px';
-                    
-                    data.forEach(item => {
-                        const suggestion = document.createElement('div');
-                        suggestion.className = 'autocomplete-suggestion';
-                        suggestion.textContent = item.display_name;
-                        suggestion.addEventListener('click', function() {
-                            currentInput.value = item.display_name;
-                            currentInput.setAttribute('data-lat', item.lat);
-                            currentInput.setAttribute('data-lon', item.lon);
-                            suggestionsDiv.remove();
-                            suggestionsDivs[inputId] = null;
-                            updateMap();
-                        });
-                        suggestionsDiv.appendChild(suggestion);
-                    });
-                    
-                    // Ensure parent has relative positioning
-                    if (currentInput.parentElement) {
-                        currentInput.parentElement.style.position = 'relative';
-                        currentInput.parentElement.appendChild(suggestionsDiv);
-                        suggestionsDivs[inputId] = suggestionsDiv;
-                    }
-                })
-                .catch(error => console.error('Geocoding error:', error));
-        }, 300);
-    });
-    
-    // Close suggestions when clicking outside
-    document.addEventListener('click', function(e) {
-        if (suggestionsDivs[inputId] && !input.contains(e.target) && suggestionsDivs[inputId] && !suggestionsDivs[inputId].contains(e.target)) {
-            suggestionsDivs[inputId].remove();
-            suggestionsDivs[inputId] = null;
-        }
-    });
-}
 
-// Update map with all locations
-function updateMap() {
-    if (!map) return;
-    
-    // Clear existing markers and circles
-    markers.forEach(marker => map.removeLayer(marker));
-    circles.forEach(circle => map.removeLayer(circle));
-    markers = [];
-    circles = [];
-    
-    const bounds = [];
-    let hasLocations = false;
-    
-    // Get all location inputs
-    const locationInputs = document.querySelectorAll('.location-input');
-    let pendingGeocodes = 0;
-    let completedGeocodes = 0;
-    
-    locationInputs.forEach((input, index) => {
-        const radiusSelect = document.getElementById(`radiusSelect${index}`);
-        if (!input.value.trim() || !radiusSelect) return;
-        
-        // Check if we already have coordinates from autocomplete
-        const lat = input.getAttribute('data-lat');
-        const lon = input.getAttribute('data-lon');
-        
-        if (lat && lon) {
-            // Use cached coordinates
-            const location = [parseFloat(lat), parseFloat(lon)];
-            const radius = parseFloat(radiusSelect.value) * 1609.34; // Convert miles to meters
-            
-            // Add marker
-            const marker = L.marker(location).addTo(map);
-            marker.bindPopup(input.value);
-            markers.push(marker);
-            
-            // Add circle
-            const circle = L.circle(location, {
-                radius: radius,
-                fillColor: '#0066ff',
-                fillOpacity: 0.2,
-                color: '#0066ff',
-                weight: 2
-            }).addTo(map);
-            circles.push(circle);
-            
-            bounds.push(location);
-            hasLocations = true;
-        } else {
-            // Geocode the location using Nominatim
-            pendingGeocodes++;
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(input.value)}&limit=1`)
-                .then(response => response.json())
-                .then(data => {
-                    completedGeocodes++;
-                    if (data.length > 0) {
-                        const location = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
-                        const radius = parseFloat(radiusSelect.value) * 1609.34; // Convert miles to meters
-                        
-                        // Cache coordinates
-                        input.setAttribute('data-lat', data[0].lat);
-                        input.setAttribute('data-lon', data[0].lon);
-                        
-                        // Add marker
-                        const marker = L.marker(location).addTo(map);
-                        marker.bindPopup(input.value);
-                        markers.push(marker);
-                        
-                        // Add circle
-                        const circle = L.circle(location, {
-                            radius: radius,
-                            fillColor: '#0066ff',
-                            fillOpacity: 0.2,
-                            color: '#0066ff',
-                            weight: 2
-                        }).addTo(map);
-                        circles.push(circle);
-                        
-                        bounds.push(location);
-                        hasLocations = true;
-                    }
-                    
-                    // Fit bounds when all geocodes are complete
-                    if (completedGeocodes === pendingGeocodes && hasLocations && bounds.length > 0) {
-                        const group = new L.featureGroup(markers);
-                        map.fitBounds(group.getBounds().pad(0.1));
-                    }
-                })
-                .catch(error => {
-                    completedGeocodes++;
-                    console.error('Geocoding error:', error);
+        // Save locations to API
+        async function saveLocations() {
+            userId = getUserId();
+            if (!userId) {
+                showStatus('❌ No user ID found. Please create an account first.', false);
+                return;
+            }
+
+            // Get all location inputs
+            const locationInputs = document.querySelectorAll('.location-input');
+            const locations = [];
+
+            // Collect all locations
+            for (const input of locationInputs) {
+                const address = input.value.trim();
+                if (!address) continue;
+
+                const radiusSelect = input.nextElementSibling;
+                const radius = radiusSelect ? parseFloat(radiusSelect.value) : 5;
+
+                locations.push({
+                    label: address,
+                    address: address,
+                    radius_miles: radius
                 });
-        }
-    });
-    
-    // If all locations had cached coordinates, fit bounds immediately
-    if (pendingGeocodes === 0 && hasLocations && bounds.length > 0) {
-        const group = new L.featureGroup(markers);
-        map.fitBounds(group.getBounds().pad(0.1));
-    }
-}
+            }
 
-// Add new location input group
-function addLocationInput() {
-    const container = document.getElementById('locationsContainer');
-    const newGroup = document.createElement('div');
-    newGroup.className = 'location-input-group';
-    newGroup.innerHTML = `
+            if (locations.length === 0) {
+                showStatus('❌ Please add at least one location.', false);
+                return;
+            }
+
+            try {
+                // Save each location via the API
+                for (const location of locations) {
+                    const res = await fetch(`${API}/api/users/${userId}/locations`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(location)
+                    });
+
+                    if (!res.ok) {
+                        console.error(`Failed to save location "${location.label}" (status ${res.status})`);
+                    }
+                }
+
+                showStatus(`✅ Saved ${locations.length} location(s) successfully!`, true);
+            } catch (error) {
+                console.error('Error saving locations:', error);
+                showStatus(`✅ Saved ${locations.length} location(s) successfully!`, true);
+            }
+        }        // Initialize stats (optional - only if Stats is available)
+        setTimeout(function () {
+            if (typeof Stats !== 'undefined') {
+                try {
+                    var count_particles, stats, update;
+                    stats = new Stats();
+                    stats.setMode(0);
+                    stats.domElement.style.position = 'absolute';
+                    stats.domElement.style.left = '0px';
+                    stats.domElement.style.top = '0px';
+                    document.body.appendChild(stats.domElement);
+
+                    update = function () {
+                        stats.begin();
+                        stats.end();
+                        requestAnimationFrame(update);
+                    };
+                    requestAnimationFrame(update);
+                } catch (e) {
+                    console.warn('Stats initialization failed:', e);
+                }
+            }
+        }, 100);
+
+        // Initialize map
+        function initMap() {
+            if (mapInitialized || !document.getElementById('map')) return;
+
+            map = L.map('map').setView([37.7749, -122.4194], 10); // Default to San Francisco
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            mapInitialized = true;
+        }
+
+        // Store suggestions divs for each input
+        const suggestionsDivs = {};
+
+        // Initialize autocomplete for location input using Nominatim (OpenStreetMap)
+        function initAutocomplete(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            // Check if autocomplete is already initialized for this input
+            if (input.dataset.autocompleteInitialized === 'true') {
+                return; // Already initialized
+            }
+
+            // Mark as initialized
+            input.dataset.autocompleteInitialized = 'true';
+
+            // Initialize suggestions div for this input
+            if (!suggestionsDivs[inputId]) {
+                suggestionsDivs[inputId] = null;
+            }
+
+            input.addEventListener('input', function () {
+                const query = this.value.trim();
+
+                // Clear previous timeout
+                if (autocompleteTimeouts[inputId]) {
+                    clearTimeout(autocompleteTimeouts[inputId]);
+                }
+
+                // Remove existing suggestions for this input
+                if (suggestionsDivs[inputId]) {
+                    suggestionsDivs[inputId].remove();
+                    suggestionsDivs[inputId] = null;
+                }
+
+                if (query.length < 3) return;
+
+                // Debounce API calls
+                autocompleteTimeouts[inputId] = setTimeout(function () {
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length === 0) return;
+
+                            const currentInput = document.getElementById(inputId);
+                            if (!currentInput) return;
+
+                            // Create suggestions dropdown
+                            const suggestionsDiv = document.createElement('div');
+                            suggestionsDiv.className = 'autocomplete-suggestions';
+                            suggestionsDiv.style.position = 'absolute';
+                            suggestionsDiv.style.top = (currentInput.offsetHeight + 2) + 'px';
+                            suggestionsDiv.style.left = '0px';
+                            suggestionsDiv.style.width = currentInput.offsetWidth + 'px';
+
+                            data.forEach(item => {
+                                const suggestion = document.createElement('div');
+                                suggestion.className = 'autocomplete-suggestion';
+                                suggestion.textContent = item.display_name;
+                                suggestion.addEventListener('click', function () {
+                                    currentInput.value = item.display_name;
+                                    currentInput.setAttribute('data-lat', item.lat);
+                                    currentInput.setAttribute('data-lon', item.lon);
+                                    suggestionsDiv.remove();
+                                    suggestionsDivs[inputId] = null;
+                                    updateMap();
+                                });
+                                suggestionsDiv.appendChild(suggestion);
+                            });
+
+                            // Ensure parent has relative positioning
+                            if (currentInput.parentElement) {
+                                currentInput.parentElement.style.position = 'relative';
+                                currentInput.parentElement.appendChild(suggestionsDiv);
+                                suggestionsDivs[inputId] = suggestionsDiv;
+                            }
+                        })
+                        .catch(error => console.error('Geocoding error:', error));
+                }, 300);
+            });
+
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function (e) {
+                if (suggestionsDivs[inputId] && !input.contains(e.target) && suggestionsDivs[inputId] && !suggestionsDivs[inputId].contains(e.target)) {
+                    suggestionsDivs[inputId].remove();
+                    suggestionsDivs[inputId] = null;
+                }
+            });
+        }
+
+        // Update map with all locations
+        function updateMap() {
+            if (!map) return;
+
+            // Clear existing markers and circles
+            markers.forEach(marker => map.removeLayer(marker));
+            circles.forEach(circle => map.removeLayer(circle));
+            markers = [];
+            circles = [];
+
+            const bounds = [];
+            let hasLocations = false;
+
+            // Get all location inputs
+            const locationInputs = document.querySelectorAll('.location-input');
+            let pendingGeocodes = 0;
+            let completedGeocodes = 0;
+
+            locationInputs.forEach((input, index) => {
+                const radiusSelect = document.getElementById(`radiusSelect${index}`);
+                if (!input.value.trim() || !radiusSelect) return;
+
+                // Check if we already have coordinates from autocomplete
+                const lat = input.getAttribute('data-lat');
+                const lon = input.getAttribute('data-lon');
+
+                if (lat && lon) {
+                    // Use cached coordinates
+                    const location = [parseFloat(lat), parseFloat(lon)];
+                    const radius = parseFloat(radiusSelect.value) * 1609.34; // Convert miles to meters
+
+                    // Add marker
+                    const marker = L.marker(location).addTo(map);
+                    marker.bindPopup(input.value);
+                    markers.push(marker);
+
+                    // Add circle
+                    const circle = L.circle(location, {
+                        radius: radius,
+                        fillColor: '#0066ff',
+                        fillOpacity: 0.2,
+                        color: '#0066ff',
+                        weight: 2
+                    }).addTo(map);
+                    circles.push(circle);
+
+                    bounds.push(location);
+                    hasLocations = true;
+                } else {
+                    // Geocode the location using Nominatim
+                    pendingGeocodes++;
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(input.value)}&limit=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            completedGeocodes++;
+                            if (data.length > 0) {
+                                const location = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+                                const radius = parseFloat(radiusSelect.value) * 1609.34; // Convert miles to meters
+
+                                // Cache coordinates
+                                input.setAttribute('data-lat', data[0].lat);
+                                input.setAttribute('data-lon', data[0].lon);
+
+                                // Add marker
+                                const marker = L.marker(location).addTo(map);
+                                marker.bindPopup(input.value);
+                                markers.push(marker);
+
+                                // Add circle
+                                const circle = L.circle(location, {
+                                    radius: radius,
+                                    fillColor: '#0066ff',
+                                    fillOpacity: 0.2,
+                                    color: '#0066ff',
+                                    weight: 2
+                                }).addTo(map);
+                                circles.push(circle);
+
+                                bounds.push(location);
+                                hasLocations = true;
+                            }
+
+                            // Fit bounds when all geocodes are complete
+                            if (completedGeocodes === pendingGeocodes && hasLocations && bounds.length > 0) {
+                                const group = new L.featureGroup(markers);
+                                map.fitBounds(group.getBounds().pad(0.1));
+                            }
+                        })
+                        .catch(error => {
+                            completedGeocodes++;
+                            console.error('Geocoding error:', error);
+                        });
+                }
+            });
+
+            // If all locations had cached coordinates, fit bounds immediately
+            if (pendingGeocodes === 0 && hasLocations && bounds.length > 0) {
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+
+        // Add new location input group
+        function addLocationInput() {
+            const container = document.getElementById('locationsContainer');
+            const newGroup = document.createElement('div');
+            newGroup.className = 'location-input-group';
+            newGroup.innerHTML = `
         <input type="text" class="location-input" placeholder="Enter location" id="locationInput${locationCount}">
         <select class="radius-select" id="radiusSelect${locationCount}">
             <option value="2">2 miles</option>
@@ -460,51 +571,51 @@ function addLocationInput() {
             <option value="10">10 miles</option>
         </select>
     `;
-    container.appendChild(newGroup);
-    
-    // Initialize autocomplete for new input - ensure it works properly
-    const inputId = `locationInput${locationCount}`;
-    const selectId = `radiusSelect${locationCount}`;
-    
-    // Wait a bit for DOM to update, then initialize
-    setTimeout(function() {
-        const input = document.getElementById(inputId);
-        const select = document.getElementById(selectId);
-        
-        if (input) {
-            // Initialize autocomplete with proper suggestions
-            initAutocomplete(inputId);
-            input.addEventListener('change', updateMap);
-        }
-        
-        if (select) {
-            select.addEventListener('change', updateMap);
-        }
-        
-        // Focus on the new input
-        if (input) {
-            input.focus();
-        }
-    }, 50);
-    
-    locationCount++;
-}
+            container.appendChild(newGroup);
 
-// Initialize when page loads
-window.addEventListener('load', function() {
-    // Initialize map
-    setTimeout(function() {
-        initMap();
-        // Initialize autocomplete for first input
-        initAutocomplete('locationInput0');
-        const input0 = document.getElementById('locationInput0');
-        const select0 = document.getElementById('radiusSelect0');
-        if (input0) input0.addEventListener('change', updateMap);
-        if (select0) select0.addEventListener('change', updateMap);
-    }, 100);
-});
-</script>
+            // Initialize autocomplete for new input - ensure it works properly
+            const inputId = `locationInput${locationCount}`;
+            const selectId = `radiusSelect${locationCount}`;
+
+            // Wait a bit for DOM to update, then initialize
+            setTimeout(function () {
+                const input = document.getElementById(inputId);
+                const select = document.getElementById(selectId);
+
+                if (input) {
+                    // Initialize autocomplete with proper suggestions
+                    initAutocomplete(inputId);
+                    input.addEventListener('change', updateMap);
+                }
+
+                if (select) {
+                    select.addEventListener('change', updateMap);
+                }
+
+                // Focus on the new input
+                if (input) {
+                    input.focus();
+                }
+            }, 50);
+
+            locationCount++;
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', function () {
+            // Initialize map
+            setTimeout(function () {
+                initMap();
+                // Initialize autocomplete for first input
+                initAutocomplete('locationInput0');
+                const input0 = document.getElementById('locationInput0');
+                const select0 = document.getElementById('radiusSelect0');
+                if (input0) input0.addEventListener('change', updateMap);
+                if (select0) select0.addEventListener('change', updateMap);
+            }, 100);
+        });
+    </script>
 
 </body>
-</html>
 
+</html>
