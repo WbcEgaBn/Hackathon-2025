@@ -1,183 +1,109 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Subscription</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            padding: 50px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-            text-align: center;
-        }
-
-        p {
-            color: #666;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        input[type="email"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="email"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .message {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 14px;
-            display: none;
-        }
-
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
-        }
-
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            display: block;
-        }
-    </style>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React and ReactDOM from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Subscribe Today</h1>
-        <p>Join our mailing list to get updates and exclusive content</p>
+    <div id="root"></div>
 
-        <form id="emailForm">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    placeholder="Enter your email address" 
-                    required
-                >
-            </div>
-            <button type="submit">Subscribe</button>
-        </form>
+    <script type="text/babel">
+        const { useState } = React;
 
-        <div id="message" class="message"></div>
-    </div>
+        function EmailForm() {
+            const [email, setEmail] = useState('');
+            const [message, setMessage] = useState('');
+            const [messageType, setMessageType] = useState('');
 
-    <script>
-        const form = document.getElementById('emailForm');
-        const messageDiv = document.getElementById('message');
+            const isValidEmail = (email) => {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            };
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
+            const handleSubmit = (e) => {
+                e.preventDefault();
 
-            const email = document.getElementById('email').value;
+                if (!isValidEmail(email)) {
+                    setMessage('Please enter a valid email address');
+                    setMessageType('error');
+                    return;
+                }
 
-            // Simple email validation
-            if (!isValidEmail(email)) {
-                showMessage('Please enter a valid email address', 'error');
-                return;
-            }
+                console.log('Email submitted:', email);
+                setMessage(`Thank you! We've received your email: ${email}`);
+                setMessageType('success');
+                setEmail('');
 
-            // Simulate sending data (in a real application, you'd send this to a server)
-            console.log('Email submitted:', email);
-            
-            showMessage(`Thank you! We've received your email: ${email}`, 'success');
-            
-            // Clear the form
-            form.reset();
+                setTimeout(() => {
+                    setMessage('');
+                    setMessageType('');
+                }, 5000);
+            };
 
-            // Clear the message after 5 seconds
-            setTimeout(() => {
-                messageDiv.classList.remove('success', 'error');
-                messageDiv.textContent = '';
-            }, 5000);
-        });
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex justify-center items-center p-4">
+                    <div className="bg-white rounded-lg shadow-2xl p-12 w-full max-w-md">
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
+                            Subscribe Today
+                        </h1>
+                        <p className="text-gray-600 text-center mb-8 text-sm">
+                            Join our mailing list to get updates and exclusive content
+                        </p>
 
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div>
+                                <label 
+                                    htmlFor="email" 
+                                    className="block text-gray-800 font-semibold mb-2 text-sm"
+                                >
+                                    Email Address
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Enter your email address"
+                                    required
+                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                            >
+                                Subscribe
+                            </button>
+                        </form>
+
+                        {message && (
+                            <div
+                                className={`mt-6 p-3 rounded-lg text-center text-sm font-medium transition-all ${
+                                    messageType === 'success'
+                                        ? 'bg-green-100 text-green-800 border border-green-300'
+                                        : 'bg-red-100 text-red-800 border border-red-300'
+                                }`}
+                            >
+                                {message}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
         }
 
-        function showMessage(text, type) {
-            messageDiv.textContent = text;
-            messageDiv.classList.remove('success', 'error');
-            messageDiv.classList.add(type);
-        }
+        // Render the React component
+        ReactDOM.render(<EmailForm />, document.getElementById('root'));
     </script>
 </body>
 </html>
+
