@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Main Menu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- EB Garamond Font -->
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- particles.js style -->
+<link rel="stylesheet" media="screen" href="css/style.css">
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'EB Garamond', serif;
+        overflow: hidden;
+    }
+
+    /* Ensure particles take full background */
+    #particles-js {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: #111;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+    
+    #particles-js canvas {
+        pointer-events: none;
+    }
+
+    /* Container */
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        width: 90%;
+        max-width: 600px;
+        z-index: 10;
+        pointer-events: auto;
+    }
+
+    .main-menu-btn {
+        width: 100%;
+        padding: 20px;
+        font-size: 24px;
+        background: #0066ff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        font-family: 'EB Garamond', serif;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+        pointer-events: auto;
+        position: relative;
+        z-index: 100;
+    }
+
+    .main-menu-btn:hover {
+        background: #004ecc;
+    }
+</style>
+</head>
+<body>
+
+<!-- particles.js background -->
+<div id="particles-js"></div>
+
+<div class="container">
+  <button class="main-menu-btn" onclick="window.location.href='interests.html'">Edit Interests</button>
+  <button class="main-menu-btn" onclick="window.location.href='locations.html'">Edit Locations</button>
+</div>
+
+<!-- particles scripts -->
+<script src="../particles.js"></script>
+<script src="js/app.js"></script>
+
+<!-- stats.js -->
+<script src="js/lib/stats.js" onerror="console.warn('Failed to load stats.js')"></script>
+
+<script>
+// Initialize stats (optional - only if Stats is available)
+setTimeout(function() {
+    if (typeof Stats !== 'undefined') {
+        try {
+            var count_particles, stats, update;
+            stats = new Stats();
+            stats.setMode(0);
+            stats.domElement.style.position = 'absolute';
+            stats.domElement.style.left = '0px';
+            stats.domElement.style.top = '0px';
+            document.body.appendChild(stats.domElement);
+
+            update = function() {
+                stats.begin();
+                stats.end();
+                requestAnimationFrame(update);
+            };
+            requestAnimationFrame(update);
+        } catch (e) {
+            console.warn('Stats initialization failed:', e);
+        }
+    }
+}, 100);
+</script>
+
+</body>
+</html>
+

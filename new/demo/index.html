@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- EB Garamond Font -->
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- particles.js style -->
+<link rel="stylesheet" media="screen" href="css/style.css">
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'EB Garamond', serif;
+        overflow: hidden;
+    }
+
+    /* Ensure particles take full background */
+    #particles-js {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: #111;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+    
+    #particles-js canvas {
+        pointer-events: none;
+    }
+
+    /* Container */
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        width: 90%;
+        max-width: 450px;
+        z-index: 10;
+        pointer-events: auto;
+    }
+
+    .logo {
+        width: 55vw;
+        max-width: 260px;
+        min-width: 120px;
+        height: auto;
+        margin-bottom: 40px;
+    }
+
+    .login-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .email-box {
+        flex: 1;
+        padding: 10px;
+        font-size: 18px;
+        font-family: 'EB Garamond', serif;
+    }
+
+    .sign-in-btn {
+        padding: 10px 20px;
+        font-size: 18px;
+        background: #0066ff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-family: 'EB Garamond', serif;
+        pointer-events: auto;
+        position: relative;
+        z-index: 100;
+    }
+
+    .sign-in-btn:hover {
+        background: #004ecc;
+    }
+
+    .create-account-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        background: #ddd;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-family: 'EB Garamond', serif;
+        pointer-events: auto;
+        position: relative;
+        z-index: 100;
+    }
+
+    .create-account-btn:hover {
+        background: #c7c7c7;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+</style>
+</head>
+<body>
+
+<!-- particles.js background -->
+<div id="particles-js"></div>
+
+<div class="container">
+  <img src="logo.png" class="logo" alt="Logo">
+
+  <div class="login-row">
+    <input id="emailInput" type="email" class="email-box" placeholder="Enter an email" onkeypress="if(event.key==='Enter') handleActionButton()">
+    <button id="actionBtn" type="button" class="sign-in-btn" onclick="handleActionButton()">Sign In</button>
+  </div>
+
+  <button id="makeAccountBtn" type="button" class="create-account-btn" onclick="handleMakeAccount()">Make an Account</button>
+
+  <div class="login-row password-box-row hidden"> 
+    <input id="newField" type="password" class="email-box" placeholder="Enter a password" onkeypress="if(event.key==='Enter') handleSignUp()"> 
+    <button id="passwordActionBtn" type="button" class="sign-in-btn" onclick="handleSignUp()">Continue</button>
+  </div>
+</div>
+
+<!-- particles scripts -->
+<script src="../particles.js"></script>
+<script src="js/app.js"></script>
+
+<!-- stats.js -->
+<script src="js/lib/stats.js" onerror="console.warn('Failed to load stats.js')"></script>
+
+<script>
+// API Configuration
+const API = "http://127.0.0.1:8000";
+
+// Initialize stats (optional - only if Stats is available)
+setTimeout(function() {
+    if (typeof Stats !== 'undefined') {
+        try {
+            var count_particles, stats, update;
+            stats = new Stats();
+            stats.setMode(0);
+            stats.domElement.style.position = 'absolute';
+            stats.domElement.style.left = '0px';
+            stats.domElement.style.top = '0px';
+            document.body.appendChild(stats.domElement);
+
+            update = function() {
+                stats.begin();
+                stats.end();
+                requestAnimationFrame(update);
+            };
+            requestAnimationFrame(update);
+        } catch (e) {
+            console.warn('Stats initialization failed:', e);
+        }
+    }
+}, 100);
+
+// Create User → POST /users/
+async function createUser(email) {
+    try {
+        const res = await fetch(`${API}/users/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        });
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            console.error(`Failed to create user (status ${res.status}):`, errorText);
+            return null;
+        }
+
+        const data = await res.json();
+        return data.user_id;
+    } catch (error) {
+        console.error('Error creating user:', error);
+        return null;
+    }
+}
+
+// Get or create user by email
+async function getOrCreateUser(email) {
+    try {
+        // First try to find existing user (you might need to implement GET /users/by-email/{email} endpoint)
+        // For now, we'll just create a new user
+        const userId = await createUser(email);
+        return userId;
+    } catch (error) {
+        console.error('Error getting/creating user:', error);
+        return null;
+    }
+}
+
+// Sign in handler
+async function handleSignIn() {
+    const email = document.getElementById("emailInput").value;
+    if (email.trim() === "") {
+        alert("Please enter your email.");
+        return;
+    }
+    
+    // Try to get or create user
+    const userId = await getOrCreateUser(email);
+    
+    if (userId) {
+        // Store userId in sessionStorage for use in other pages
+        sessionStorage.setItem('userId', userId);
+        sessionStorage.setItem('userEmail', email);
+        window.location.href = "main-menu.html";
+    } else {
+        alert("Failed to sign in. Please try again.");
+    }
+}
+
+// Sign up handler
+async function handleSignUp() {
+    const email = document.getElementById("emailInput").value;
+    const password = document.getElementById("newField").value;
+    
+    if (email.trim() === "" || password.trim() === "") {
+        alert("Please enter both email and password.");
+        return;
+    }
+    
+    // Create user via API
+    const userId = await createUser(email);
+    
+    if (userId) {
+        // Store userId in sessionStorage for use in other pages
+        sessionStorage.setItem('userId', userId);
+        sessionStorage.setItem('userEmail', email);
+        window.location.href = "main-menu.html";
+    } else {
+        alert("Failed to create account. Please try again.");
+    }
+}
+
+// Handle action button (Sign In or Sign Up)
+async function handleActionButton() {
+    const passwordRow = document.querySelector('.password-box-row');
+    if (passwordRow && passwordRow.classList.contains('hidden')) {
+        await handleSignIn();
+    } else {
+        await handleSignUp();
+    }
+}
+
+// Handle make account button
+function handleMakeAccount() {
+    // Show the password field row
+    const passwordRow = document.querySelector('.password-box-row');
+    if (passwordRow) {
+        passwordRow.classList.remove("hidden");
+    }
+    
+    // Change Sign In → Sign Up
+    const btn = document.getElementById("actionBtn");
+    if (btn) {
+        btn.textContent = "Sign Up";
+        btn.style.background = "#28a745";
+    }
+    
+    // Hide make account button
+    const makeAccountBtn = document.getElementById("makeAccountBtn");
+    if (makeAccountBtn) {
+        makeAccountBtn.classList.add("hidden");
+    }
+    
+    // Focus on password field
+    setTimeout(function() {
+        const passwordField = document.getElementById("newField");
+        if (passwordField) {
+            passwordField.focus();
+        }
+    }, 100);
+}
+</script>
+
+</body>
+</html>
