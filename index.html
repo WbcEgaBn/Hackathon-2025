@@ -1,18 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Email Subscription</title>
-    <!-- Tailwind CSS CDN -->
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React and ReactDOM from CDN -->
+
+    <!-- React 18 -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel for JSX -->
+
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .gradient-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #000000, transparent);
+            margin: 2rem 0;
+        }
+
+        .input-field {
+            border: 2px solid #e5e5e5;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .button-primary {
+            background-color: #000000;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-primary:hover {
+            background-color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .button-primary:active {
+            transform: translateY(0);
+        }
+
+        .icon-container {
+            width: 56px;
+            height: 56px;
+            background-color: #f5f5f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button {
+            padding: 0.875rem 1.75rem;
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            background-color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .nav-button-secondary {
+            padding: 0.875rem 1.75rem;
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button-secondary:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-minimal {
+            background-color: #ffffff;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .card-minimal:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border-color: #e5e5e5;
+        }
+    </style>
 </head>
-<body>
+
+<body class="bg-white">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -23,112 +153,105 @@
             const [message, setMessage] = useState('');
             const [messageType, setMessageType] = useState('');
             const [isLoading, setIsLoading] = useState(false);
-            const [isFocused, setIsFocused] = useState(false);
+            const [currentPage, setCurrentPage] = useState('email');
+            const [selectedInterests, setSelectedInterests] = useState([]);
 
-            const isValidEmail = (email) => {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            };
+            const interests = [
+                { id: 'construction', label: 'Construction & Development', icon: '🏗️' },
+                { id: 'traffic', label: 'Traffic & Transportation', icon: '🚗' },
+                { id: 'weed', label: 'Parks & Weeds Management', icon: '🌿' },
+                { id: 'zoning', label: 'Zoning & Planning', icon: '📐' },
+                { id: 'utilities', label: 'Utilities & Infrastructure', icon: '⚡' },
+                { id: 'safety', label: 'Public Safety', icon: '🚨' },
+                { id: 'education', label: 'Education & Schools', icon: '📚' },
+                { id: 'business', label: 'Local Business', icon: '💼' },
+            ];
 
-            const handleSubmit = async (e) => {
+            const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+            const handleSubmit = (e) => {
                 e.preventDefault();
 
-                if (!email.trim()) {
-                    setMessage('Please enter an email address');
-                    setMessageType('error');
-                    return;
-                }
-
                 if (!isValidEmail(email)) {
-                    setMessage('Please enter a valid email address');
-                    setMessageType('error');
+                    setMessage("Enter a valid email address");
+                    setMessageType("error");
                     return;
                 }
 
                 setIsLoading(true);
-                
-                // Simulate API call
-                setTimeout(() => {
-                    console.log('Email submitted:', email);
-                    setMessage(`✓ Success! Check your email at ${email}`);
-                    setMessageType('success');
-                    setEmail('');
-                    setIsLoading(false);
 
-                    setTimeout(() => {
-                        setMessage('');
-                        setMessageType('');
-                    }, 5000);
-                }, 1500);
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setCurrentPage("interests");
+                }, 1000);
             };
 
-            return (
-                <div style={{minHeight: '100vh', backgroundColor: '#E2CCC6'}} className="flex justify-center items-center p-4">
-                    <div className="w-full max-w-md">
-                        {/* Header */}
-                        <div className="mb-12 text-center">
-                            <div className="inline-block p-3 bg-white rounded-full mb-4 shadow-sm">
-                                <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <h1 className="text-4xl font-light text-gray-900 mb-2">
-                                Stay Updated
-                            </h1>
-                            <p className="text-gray-600 font-light text-base">
-                                Get the latest news delivered to your inbox
-                            </p>
-                        </div>
+            const toggleInterest = (id) => {
+                setSelectedInterests(prev =>
+                    prev.includes(id)
+                        ? prev.filter(i => i !== id)
+                        : [...prev, id]
+                );
+            };
 
-                        {/* Form Card */}
-                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                            <div className="p-8">
-                                <form onSubmit={handleSubmit} className="space-y-6">
+            const handleFinish = () => {
+                if (selectedInterests.length === 0) {
+                    setMessage("Select at least one interest");
+                    setMessageType("error");
+                    return;
+                }
+
+                setMessage("Saved Successfully ✅");
+                setMessageType("success");
+            };
+
+            if (currentPage === "email") {
+                return (
+                    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-8">
+                        <div className="w-full max-w-md">
+                            {/* Header */}
+                            <div className="text-center mb-12 fade-in">
+                                <div className="inline-block mb-6">
+                                    <div className="icon-container mx-auto mb-4">✉️</div>
+                                </div>
+                                <h1 className="text-5xl font-bold text-black mb-3">Stay Updated</h1>
+                                <p className="text-gray-600 text-base leading-relaxed">
+                                    Subscribe to get the latest updates about Colorado Springs
+                                </p>
+                            </div>
+
+                            {/* Form Card */}
+                            <div className="card-minimal mb-8 fade-in">
+                                <form onSubmit={handleSubmit} className="space-y-5">
                                     <div>
-                                        <label 
-                                            htmlFor="email" 
-                                            className="block text-gray-700 font-medium mb-3 text-sm uppercase tracking-wide"
-                                        >
+                                        <label className="block text-sm font-semibold text-black mb-3">
                                             Email Address
                                         </label>
-                                        <div className={`relative transition-all duration-300 ${isFocused ? 'transform scale-105' : ''}`}>
-                                            <input
-                                                type="email"
-                                                id="email"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                onFocus={() => setIsFocused(true)}
-                                                onBlur={() => setIsFocused(false)}
-                                                placeholder="name@example.com"
-                                                required
-                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl text-base transition-all duration-300 focus:outline-none focus:bg-white focus:border-gray-400 focus:shadow-md placeholder-gray-400"
-                                            />
-                                            {email && isValidEmail(email) && (
-                                                <div className="absolute right-4 top-4">
-                                                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                    </svg>
-                                                </div>
-                                            )}
-                                        </div>
+                                        <input
+                                            type="email"
+                                            placeholder="you@example.com"
+                                            className="w-full px-4 py-3 input-field bg-white rounded-lg text-black placeholder-gray-400"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
                                     </div>
 
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="w-full px-6 py-4 bg-gray-900 text-white font-medium rounded-xl transition-all duration-300 hover:bg-gray-800 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-2 uppercase tracking-wide text-sm"
+                                        className="w-full button-primary text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50"
                                     >
                                         {isLoading ? (
                                             <>
-                                                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                                 </svg>
-                                                <span>Subscribing...</span>
+                                                Subscribing...
                                             </>
                                         ) : (
                                             <>
-                                                <span>Subscribe Now</span>
+                                                Continue
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                                 </svg>
@@ -138,62 +261,121 @@
                                 </form>
                             </div>
 
-                            {/* Benefits Section */}
-                            <div className="bg-gray-50 px-8 py-6 border-t border-gray-100">
-                                <div className="grid grid-cols-3 gap-4 text-center">
+                            {/* Message */}
+                            {message && (
+                                <div className={`p-4 rounded-lg text-center text-sm font-medium transition-all fade-in ${
+                                    messageType === 'success'
+                                        ? 'bg-green-50 text-green-800 border border-green-200'
+                                        : 'bg-red-50 text-red-800 border border-red-200'
+                                }`}>
+                                    {message}
+                                </div>
+                            )}
+
+                            {/* Benefits */}
+                            <div className="mt-12 text-center">
+                                <p className="text-xs text-gray-500 font-medium tracking-wide">BENEFITS</p>
+                                <div className="flex justify-around mt-6">
                                     <div>
-                                        <div className="text-2xl font-light text-gray-900 mb-1">100%</div>
-                                        <p className="text-xs text-gray-600 font-light">No Spam</p>
+                                        <p className="text-2xl font-bold text-black">100%</p>
+                                        <p className="text-xs text-gray-600 mt-1">No Spam</p>
                                     </div>
                                     <div>
-                                        <div className="text-2xl font-light text-gray-900 mb-1">1-2x</div>
-                                        <p className="text-xs text-gray-600 font-light">Per Week</p>
+                                        <p className="text-2xl font-bold text-black">1-2x</p>
+                                        <p className="text-xs text-gray-600 mt-1">Per Week</p>
                                     </div>
                                     <div>
-                                        <div className="text-2xl font-light text-gray-900 mb-1">∞</div>
-                                        <p className="text-xs text-gray-600 font-light">Unsubscribe</p>
+                                        <p className="text-2xl font-bold text-black">∞</p>
+                                        <p className="text-xs text-gray-600 mt-1">Unsubscribe</p>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-8">
+                    <div className="w-full max-w-2xl">
+                        {/* Header */}
+                        <div className="text-center mb-10 fade-in">
+                            <h2 className="text-4xl font-bold text-black mb-2">Select Your Interests</h2>
+                            <p className="text-gray-600">Choose topics you want to stay updated on</p>
+                        </div>
+
+                        {/* Interests Grid */}
+                        <div className="card-minimal mb-8 fade-in">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {interests.map(i => (
+                                    <button
+                                        key={i.id}
+                                        onClick={() => toggleInterest(i.id)}
+                                        className={`p-5 rounded-lg border-2 transition-all text-left ${
+                                            selectedInterests.includes(i.id)
+                                                ? 'border-black bg-black text-white'
+                                                : 'border-gray-200 bg-white text-black hover:border-gray-400'
+                                        }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-2xl">{i.icon}</span>
+                                            <span className="font-medium text-sm">{i.label}</span>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="mt-8 pt-6 border-t border-gray-200">
+                                <button
+                                    onClick={handleFinish}
+                                    className="w-full button-primary text-white font-semibold py-3 rounded-lg"
+                                >
+                                    Finish
+                                </button>
+                            </div>
+
+                            {/* Progress */}
+                            <div className="mt-6 text-center">
+                                <p className="text-sm text-gray-600 mb-2">{selectedInterests.length} of {interests.length} selected</p>
+                                <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
+                                    <div 
+                                        className="h-full bg-black transition-all duration-300"
+                                        style={{width: `${(selectedInterests.length / interests.length) * 100}%`}}
+                                    ></div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Message */}
                         {message && (
-                            <div
-                                className={`mt-6 p-4 rounded-xl text-center text-sm font-medium transition-all duration-300 animate-fadeIn ${
-                                    messageType === 'success'
-                                        ? 'bg-green-50 text-green-800 border border-green-200'
-                                        : 'bg-red-50 text-red-800 border border-red-200'
-                                }`}
-                            >
+                            <div className={`p-4 rounded-lg text-center text-sm font-medium transition-all fade-in ${
+                                messageType === 'success'
+                                    ? 'bg-green-50 text-green-800 border border-green-200'
+                                    : 'bg-red-50 text-red-800 border border-red-200'
+                            }`}>
                                 {message}
                             </div>
                         )}
 
-                        {/* Footer */}
-                        <p className="text-center text-gray-500 text-xs mt-6 font-light">
-                            We respect your privacy. Unsubscribe at any time.
-                        </p>
+                        {/* Navigation */}
+                        <div className="mt-10 flex gap-3 justify-center flex-wrap fade-in">
+                            <a href="./location-map.html" className="nav-button">
+                                → Location Search
+                            </a>
+                            <a href="./chatbot.html" className="nav-button-secondary">
+                                → AI Assistant
+                            </a>
+                        </div>
                     </div>
                 </div>
             );
         }
 
-        // Add animation keyframes
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(-10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            .animate-fadeIn {
-                animation: fadeIn 0.3s ease-out;
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<EmailForm />);
+    </script>
+</body>
+</html>
             }
         `;
         document.head.appendChild(style);
